@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <item
+        android:icon="@drawable/preferences"
+        android:showAsAction="always"
+        android:title="@string/app_name"
+        tools:ignore="AlwaysShowAction">
+        <menu>
+            <item
+                android:id="@+id/teste"
+                android:showAsAction="always"
+                android:title="@string/teste">
+            </item>
+            <item android:title="@string/backup">
+                <menu>
+                    <item
+                        android:id="@+id/enviarBackup"
+                        android:showAsAction="always"
+                        android:title="@string/enviarBackup">
+                    </item>
+                    <item
+                        android:id="@+id/restaurarBackup"
+                        android:showAsAction="always"
+                        android:title="@string/restaurarBackup">
+                    </item>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menu_coralistas"
+                android:showAsAction="always"
+                android:title="@string/menu_coralistas">
+            </item>
+            <item
+                android:id="@+id/fluxo_caixa"
+                android:showAsAction="always"
+                android:title="@string/fluxo_caixa">
+            </item>
+			<item android:title="@string/relatorios">
+                <menu>
+                    <item
+                        android:id="@+id/relatorioCadastroCoralistas"
+                         android:icon="@drawable/pdf"
+                        android:showAsAction="always"
+                        android:title="@string/relatorioCadastroCoralistas">
+                    </item>
+<!--                     <item -->
+<!--                         android:id="@+id/relatorioRegistroFrequencias" -->
+<!--                         android:icon="@drawable/pdf" -->
+<!--                         android:showAsAction="always" -->
+<!--                         android:title="@string/relatorioRegistroFrequencias"> -->
+<!--                     </item> -->
+                    <item
+                        android:id="@+id/relatorioFluxoCaixa"
+                        android:icon="@drawable/pdf"
+                        android:showAsAction="always"
+                        android:title="@string/relatorioFluxoCaixa">
+                    </item>
+                    <item
+                        android:id="@+id/relatorioPagamentoMensalidades"
+                        android:icon="@drawable/pdf"
+                        android:showAsAction="always"
+                        android:title="@string/relatorioPagamentoMensalidades">
+                    </item>
+                    <item
+                        android:id="@+id/gerarCoralistasTxt"
+                        android:icon="@drawable/txt"
+                        android:showAsAction="always"
+                        android:title="@string/gerarCoralistasTxt">
+                    </item>
+                    <item
+                        android:id="@+id/gerarQrCodesCoralistasTxt"
+                        android:icon="@drawable/txt"
+                        android:showAsAction="always"
+                        android:title="@string/gerarQrCodesCoralistasTxt">
+                    </item>
+                    <item
+                        android:id="@+id/enviarEmail"
+                        android:icon="@drawable/enviar_email"
+                        android:showAsAction="always"
+                        android:title="@string/enviarEmail">
+                    </item>
+                    
+                </menu>
+            </item>            
+             <item android:title="@string/configuracoes">
+                <menu>
+                    <item
+                        android:id="@+id/defineValorMensalidade"
+                        android:showAsAction="always"
+                        android:title="@string/defineValorMensalidade">
+                    </item>
+                    
+                </menu>
+            </item>
+        </menu>
+    </item>
+
+</menu>

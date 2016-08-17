@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <TextView
+        style="@style/tituloStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/listaDeCoralistas"
+        tools:ignore="SpUsage" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <RadioButton
+            android:id="@+id/coralistasAtivos"
+            android:checked="true"
+            android:text="@string/ativos" />
+        <RadioButton
+            android:id="@+id/coralistasInativos"
+            android:text="@string/inativos" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp" >
+
+        <EditText
+            android:id="@+id/pesquisaCoralista"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/pesquisarCoralista"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/btn_novoCoralista"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.13"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/contentDescription"
+            android:src="@drawable/new_user" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listaCoralista"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </ListView>
+
+</LinearLayout>

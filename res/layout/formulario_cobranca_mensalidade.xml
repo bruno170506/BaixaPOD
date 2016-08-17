@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp" >
+
+    <TextView
+        style="@style/tituloStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:text="@string/pagamentoMensalidade" />
+
+    <TextView
+        android:id="@+id/cobranca_mensalidade_coralista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/coralista"
+        android:textSize="20dp"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/cobranca_mensalidade_mesreferencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/amarelo"
+        android:text="@string/mes"
+        android:textSize="20dp"
+        tools:ignore="SpUsage" />
+
+    <CheckBox
+        android:id="@+id/checkbox_descontoTerceiro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/descontoTerceiro" />
+
+    <LinearLayout
+        android:id="@+id/layoutValorPago"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/valorPago"
+            android:textSize="20dp"
+            tools:ignore="SpUsage" />
+
+        <EditText
+            android:id="@+id/cobranca_mensalidade_valorPago"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:inputType="numberDecimal"
+            android:textSize="20dp"
+            tools:ignore="SpUsage,RtlHardcoded" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/valorAPagar"
+            android:textSize="20dp"
+            tools:ignore="SpUsage" />
+
+        <EditText
+            android:id="@+id/cobranca_mensalidade_valorAPagar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:inputType="numberDecimal"
+            android:textSize="20dp"
+            tools:ignore="SpUsage,RtlHardcoded" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/radiobutton_semAcrescimo"
+            android:checked="true"
+            android:text="@string/semAcrescimo" />
+
+        <RadioButton
+            android:id="@+id/radiobutton_comAcrescimo"
+            android:text="@string/comAcrescimo" />
+
+        <Button
+            android:id="@+id/btnConfirmacaoMensalidade"
+            style="@style/styleSaveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirmarPagamento" />
+    </RadioGroup>
+
+</LinearLayout>
