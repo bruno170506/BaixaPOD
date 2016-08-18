@@ -12,13 +12,11 @@ import br.com.appcoral.dao.DBConnections;
 import br.com.appcoral.util.BackupUtil;
 import br.com.appcoral.util.FileUtil;
 import br.com.appcoral.util.reports.RelatorioUtil;
-import br.com.appcoral.util.webservice.coralista.listarCoralistasTask;
 
 @SuppressLint("InlinedApi")
 public class MainActivity extends Activity {
 
 	private DBConnections dbConnections;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +38,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		switch (item.getItemId()) {
+
 		case R.id.menu_coralistas:
 			irParaListagemCoralistas();
 			break;
@@ -50,7 +49,7 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.defineValorMensalidade:
 			irParaDefinirValorMensalidade();
-			break;	
+			break;
 		case R.id.enviarBackup:
 			BackupUtil.enviarBackup(this);
 			break;
@@ -80,7 +79,7 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void irParaDefinirValorMensalidade() {
 		if (!(this instanceof DefineValorMensalidadeActivity)) {
 			Intent intent = new Intent(MainActivity.this, DefineValorMensalidadeActivity.class);

@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 import br.com.appcoral.R;
 import br.com.appcoral.dao.CoralistaDAO;
 import br.com.appcoral.model.Coralista;
@@ -44,7 +46,7 @@ public class ListagemCoralistaActivity extends MainActivity {
 		setContentView(R.layout.listagem_coralistas);
 
 		desabilitarTecladoInicialmente();
-		
+
 		ativos = (RadioButton) findViewById(R.id.coralistasAtivos);
 		ativos.setOnClickListener(new OnClickListener() {
 			@Override
@@ -90,15 +92,22 @@ public class ListagemCoralistaActivity extends MainActivity {
 
 		lista = (ListView) findViewById(R.id.listaCoralista);
 		registerForContextMenu(lista);
-//		recarregaLista(getDbConnections().getCoralistaDAO().listaCoralistas(CoralistaDAO.STATUS_ATIVO));
-		
-		
-		new listarCoralistasTask(this).execute();
-		
-//		List<Coralista> listaVazia = new ArrayList<Coralista>();
-//		recarregaLista(listaVazia);
-		
 
+		new listarCoralistasTask(this).execute();
+
+		TextView titulo = (TextView) findViewById(R.id.teste);
+		titulo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				teste();
+			}
+
+		});
+
+	}
+	private void teste() {
+		Toast.makeText(this, "Loading...", Toast.LENGTH_SHORT).show();
+		new listarCoralistasTask(this).execute();
 	}
 
 	private void desabilitarTecladoInicialmente() {

@@ -3,9 +3,7 @@ package br.com.appcoral.util.webservice.coralista;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.widget.Toast;
 import br.com.appcoral.activitys.ListagemCoralistaActivity;
-import br.com.appcoral.activitys.MainActivity;
 import br.com.appcoral.util.webservice.WebClient;
 import br.com.appcoral.util.webservice.WebServiceConstants;
 
@@ -26,7 +24,7 @@ public class listarCoralistasTask extends AsyncTask<Object, Object, String> {
 	@Override
 	protected String doInBackground(Object... params) {
 		String url = WebServiceConstants.Coralista.listarCoralista;
-		String resposta = new WebClient(url).get();
+		String resposta = new WebClient(url).post();
 		return resposta;
 	}
 
@@ -39,5 +37,4 @@ public class listarCoralistasTask extends AsyncTask<Object, Object, String> {
 			e.printStackTrace();
 		}
 	}
-
 }
