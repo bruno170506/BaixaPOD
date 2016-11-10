@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/usuario"
+            android:src="@drawable/login" />
+
+        <EditText
+            android:id="@+id/usuario"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:hint="Usuário"
+            android:text="admin123"
+            tools:ignore="TextFields" />
+
+        <EditText
+            android:id="@+id/senha"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usuario"
+            android:layout_marginTop="18dp"
+            android:layout_toRightOf="@+id/imageView1"
+            android:ems="10"
+            android:hint="@string/senha"
+            android:inputType="textPassword"
+            android:text="123" >
+        </EditText>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/senha"
+            android:layout_toLeftOf="@+id/senha"
+            android:src="@drawable/senha" />
+
+        <CheckBox
+            android:id="@+id/mantenhaMeConectado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/imageView2"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/imageView2"
+            android:text="Mantenha-me Conectado" />
+
+        <Button
+            android:id="@+id/entrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/senha"
+            android:layout_alignRight="@+id/senha"
+            android:layout_marginTop="40dp"
+            android:layout_below="@+id/senha"
+            android:text="Entrar" />
+    </RelativeLayout>
+
+</LinearLayout>

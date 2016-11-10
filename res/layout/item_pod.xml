@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="SpUsage" >
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/listadeentrega"
+            style="@style/tituloStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:text="@string/listadeentrega" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <Spinner
+                android:id="@+id/pesquisaPodTexto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/conteudoTabela"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/previous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.81"
+                    android:src="@drawable/previous" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <!-- N_HAWB + NOME_DESTINATARIO -->
+
+                    <TextView
+                        android:id="@+id/n_hawb_nome_destinatario"
+                        android:layout_width="262dp"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textSize="35px"
+                        android:textStyle="bold" />
+
+                    <!-- RUA -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Rua:"
+                            android:textSize="35px"
+                            android:textStyle="bold"
+                            tools:ignore="ObsoleteLayoutParam" />
+
+                        <TextView
+                            android:id="@+id/rua"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/rua"
+                            android:textSize="35px"
+                            tools:ignore="ObsoleteLayoutParam" />
+                    </LinearLayout>
+
+                    <!-- NUMERO -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Número:"
+                            android:textSize="35px"
+                            android:textStyle="bold"
+                            tools:ignore="ObsoleteLayoutParam" />
+
+                        <TextView
+                            android:id="@+id/numero"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/numero"
+                            android:textSize="35px"
+                            tools:ignore="ObsoleteLayoutParam" />
+                    </LinearLayout>
+
+                    <!-- BAIRRO -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Bairro:"
+                            android:textSize="35px"
+                            android:textStyle="bold"
+                            tools:ignore="ObsoleteLayoutParam" />
+
+                        <TextView
+                            android:id="@+id/bairro"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/bairro"
+                            android:textSize="35px"
+                            tools:ignore="ObsoleteLayoutParam" />
+                    </LinearLayout>
+
+                    <!-- CIDADE -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Cidade:"
+                            android:textSize="35px"
+                            android:textStyle="bold"
+                            tools:ignore="ObsoleteLayoutParam" />
+
+                        <TextView
+                            android:id="@+id/cidade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/cidade"
+                            android:textSize="35px"
+                            tools:ignore="ObsoleteLayoutParam" />
+                    </LinearLayout>
+
+                    <!-- TENTATIVAS -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Tentativas:"
+                            android:textSize="35px"
+                            android:textStyle="bold"
+                            tools:ignore="ObsoleteLayoutParam" />
+
+                        <TextView
+                            android:id="@+id/numTentativasEntrega"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/numTentativasEntrega"
+                            android:layout_alignBottom="@+id/numTentativasEntrega"
+                            android:layout_alignParentRight="true"
+                            android:textSize="35px"
+                            tools:ignore="ObsoleteLayoutParam" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="35px"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal" >
+
+                        <Button
+                            android:id="@+id/btnEfetuarBaixa"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/camera"
+                            android:text=" Efetuar Baixa"
+                            tools:ignore="ButtonStyle" />
+
+                        <Button
+                            android:id="@+id/btnNao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/cancelar"
+                            android:text="Não"
+                            tools:ignore="ButtonStyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutNaoBaixa"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" >
+
+                        <Spinner
+                            android:id="@+id/motivo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal" >
+
+                            <Button
+                                android:id="@+id/btnConfirmar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ok"
+                                tools:ignore="ButtonStyle" />
+
+                            <Button
+                                android:id="@+id/btnCancelar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Cancelar"
+                                tools:ignore="ButtonStyle" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="0dp"
+                    android:layout_weight="0.81"
+                    android:src="@drawable/next" />
+            </TableRow>
+        </TableLayout>
+        <!-- PAGINACAO -->
+
+        <LinearLayout
+            android:id="@+id/layoutPaginacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp" >
+
+            <TextView
+                android:id="@+id/paginacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="N° PODs:  0 de 0"
+                android:textColor="@color/vermelho"
+                android:textSize="35px"
+                android:textStyle="bold"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
