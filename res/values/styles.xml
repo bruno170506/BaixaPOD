@@ -24,13 +24,5 @@
         <item name="android:textColor">#0a05a5</item>	    
         <item name="android:textStyle">bold</item>    
     </style>
-    
-     <style name="styleSaveButton">
-         <item name="android:layout_marginTop" tools:ignore="SpUsage">20dp</item>
-		<item name="android:background">@color/verde</item>
-        <item name="android:text">@string/salvar</item>	    
-        <item name="android:textColor">@color/branco</item>    
-    </style>
-    
 
 </resources>
