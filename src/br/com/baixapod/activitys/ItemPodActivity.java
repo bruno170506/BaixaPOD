@@ -4,24 +4,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,6 +46,7 @@ import br.com.baixapod.util.GPS;
 import br.com.baixapod.util.Internet;
 import br.com.baixapod.util.Mensagem;
 
+@SuppressLint("NewApi")
 public class ItemPodActivity extends MainActivity {
 
 	private static final int CAPTURA_IMAGEM = 123;
@@ -76,6 +76,26 @@ public class ItemPodActivity extends MainActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_principal, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CAPTURA_IMAGEM) {
+			if (resultCode == ItemPodActivity.RESULT_OK) {
+				Bitmap photo = (Bitmap) data.getExtras().get("data");
+				try {
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+					byte[] bytes = stream.toByteArray();
+					ItemPOD itemPOD = recuperaItemPODnaPosicao(posicaoAtual);
+					String nomeFinalDoArquivo = itemPOD.getN_hawb() + EXTENSAO_IMAGEM;
+					FileOutputStream fos = new FileOutputStream(
+							Environment.getExternalStorageDirectory() + "/ImagemPOD/" + nomeFinalDoArquivo);
+					fos.write(bytes);
+					fos.close();
+				} catch (Exception e) {}
+				 bateuFoto();
+			}
+		}
 	}
 
 	@Override
@@ -144,11 +164,17 @@ public class ItemPodActivity extends MainActivity {
 					// se não existir o diretorio e criado
 					diretorioDestino.mkdir();
 				}
-				ItemPOD itemPOD = recuperaItemPODnaPosicao(posicaoAtual);
-				String nomeFinalDoArquivo = itemPOD.getN_hawb() + EXTENSAO_IMAGEM;
-				Uri uriDestino = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/ImagemPOD", nomeFinalDoArquivo));
-				intentCapturaImagem.putExtra(MediaStore.EXTRA_OUTPUT, uriDestino);
-				
+				// ItemPOD itemPOD = recuperaItemPODnaPosicao(posicaoAtual);
+				// String nomeFinalDoArquivo = itemPOD.getN_hawb() +
+				// EXTENSAO_IMAGEM;
+				// Uri uriDestino = Uri.fromFile(new
+				// File(Environment.getExternalStorageDirectory() +
+				// "/ImagemPOD", nomeFinalDoArquivo));
+				// intentCapturaImagem.putExtra(MediaStore.EXTRA_OUTPUT,
+				// uriDestino);
+
+				// intentCapturaImagem.putExtra(MediaStore.EXTRA_OUTPUT,
+				// uriDestino);
 				startActivityForResult(intentCapturaImagem, CAPTURA_IMAGEM);
 			}
 		});
@@ -242,28 +268,6 @@ public class ItemPodActivity extends MainActivity {
 
 	}
 
-	private Uri getImageUri(Context inContext, Bitmap inImage) {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-		return Uri.parse(path);
-	}
-
-	private String getRealPathFromURI(Uri uri) {
-		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-		cursor.moveToFirst();
-		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-		return cursor.getString(idx);
-	}
-
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CAPTURA_IMAGEM) {
-			if (resultCode == ItemPodActivity.RESULT_OK) {
-				bateuFoto();
-			}
-		}
-	}
-
 	private void bateuFoto() {
 		if (Internet.temConexaoComInternet(this, matricula)) {
 			efetuarBaixaPelaInternetComImagem();
@@ -276,13 +280,14 @@ public class ItemPodActivity extends MainActivity {
 
 		final ItemPOD itemPOD = recuperaItemPODnaPosicao(posicaoAtual);
 		final String nomeArquivoComExtensao = itemPOD.getN_hawb() + EXTENSAO_IMAGEM;
-		Uri uriDestino = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/ImagemPOD", nomeArquivoComExtensao));
+		Uri uriDestino = Uri
+				.fromFile(new File(Environment.getExternalStorageDirectory() + "/ImagemPOD", nomeArquivoComExtensao));
 		final String sourceFileUri = uriDestino.getPath();
 
 		dialog = ProgressDialog.show(ItemPodActivity.this, "Aguarde...", "Efetuando Baixa do POD...", true);
 		new Thread(new Runnable() {
 			public void run() {
-				try{
+				try {
 					// faz upload do arquivo e aguarda status 200 OK
 					if (uploadFile(sourceFileUri, nomeArquivoComExtensao) == 200) {
 						runOnUiThread(new Runnable() {
@@ -301,11 +306,11 @@ public class ItemPodActivity extends MainActivity {
 						Toast.makeText(ItemPodActivity.this, Mensagem.BAIXA_POD_FAILED, Toast.LENGTH_SHORT).show();
 					}
 					dialog.dismiss();
-				}catch(Exception e){
+				} catch (Exception e) {
 					Toast.makeText(ItemPodActivity.this, Mensagem.BAIXA_POD_FAILED, Toast.LENGTH_SHORT).show();
 					dialog.dismiss();
 				}
-				
+
 			}
 		}).start();
 	}
