@@ -2,11 +2,18 @@ package br.com.baixapod.webservice;
 
 public class WebServiceConstants {
 
+	public static final String PODS_FALHA = "#";
+	public static final String SUCESSO = "sucesso";
+	
 	public interface PODs {
-		String listarPODs = "http://www.flypost.com.br/wihus/celular/lista_remessa.php";
-		String listarOcorrencias = "http://www.flypost.com.br/wihus/celular/lista_ocorrencia.php";
-		String listaPessoa = "http://www.flypost.com.br/wihus/celular/lista_pessoa.php";
-		String autenticacaoUsuario = "http://www.flypost.com.br/wihus/celular/autenticacao_usuario.php";
-		String enviarPODs = "http://www.flypost.com.br/wihus/celular/enviar_pods.php";
+
+		// Configurar Chamadas Urls REST
+		String listarPODs = "";
+		String listarOcorrencias = "";
+		String listaPessoa = "";
+		String autenticacaoUsuario = "";
+		String enviarPODs = "";
+		String uploadPOD = "";
+
 	}
 }
