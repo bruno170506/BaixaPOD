@@ -7,7 +7,7 @@ public class WebServiceConstants {
 	
 	public interface PODs {
 
-		// Configurar Chamadas Urls REST
+		// Configurar Chamadas Urls REST.
 		// BaixaPOD - REST Email: bruno170506@gmail.com
 		String listarPODs = "";
 		String listarOcorrencias = "";
