@@ -2,7 +2,9 @@ package br.com.baixapod.activitys;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 import br.com.baixapod.R;
 import br.com.baixapod.dao.BancoDoCelularDAO;
 import br.com.baixapod.dao.BancoNaNuvemDAO;
@@ -40,6 +42,10 @@ public class MainActivity extends Activity {
 			bancoDoCelularDAO = new BancoDoCelularDAO(getDbConection());
 		}
 		return bancoDoCelularDAO;
+	}
+
+	public void msgToast(Context contexto, String mensagem) {
+		Toast.makeText(contexto, mensagem, Toast.LENGTH_SHORT).show();
 	}
 
 }

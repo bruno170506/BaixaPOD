@@ -3,12 +3,11 @@ package br.com.baixapod.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.introspect.BasicClassIntrospector.GetterMethodFilter;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import br.com.baixapod.activitys.AutenticacaoActivity;
 import br.com.baixapod.activitys.ItemPodActivity;
+import br.com.baixapod.dto.CoordenadaDTO;
 import br.com.baixapod.model.ItemPOD;
 import br.com.baixapod.model.MovimentoPOD;
 import br.com.baixapod.model.Ocorrencia;
@@ -140,14 +139,19 @@ public class BancoDoCelularDAO {
 			ob.setN_tentativas(c.getString(c.getColumnIndex(IDataBaseConstants.MOVIMENTO.N_TENTATIVA)));
 			ob.setOcorrencia(c.getString(c.getColumnIndex(IDataBaseConstants.MOVIMENTO.OCORRENCIA)));
 			ob.setSucesso(c.getString(c.getColumnIndex(IDataBaseConstants.MOVIMENTO.SUCESSO)));
+			ob.setLongitude(c.getString(c.getColumnIndex(IDataBaseConstants.MOVIMENTO.LONGITUDE)));
+			ob.setLatitude(c.getString(c.getColumnIndex(IDataBaseConstants.MOVIMENTO.LATITUDE)));
+			ob.setObservacao(c.getString(c.getColumnIndex(IDataBaseConstants.MOVIMENTO.OBSERVACAO)));
 			lista.add(ob);
 		}
 		return lista;
 	}
 
-	public void inserirMovimento(ItemPOD itemPOD) {
+	public void inserirMovimento(CoordenadaDTO coordenadaDTO, ItemPOD itemPOD) {
+
 		// insere o movimento para posteriormente poder enviar ao servidor
-		MovimentoPOD movimento = new MovimentoPOD(itemPOD);
+		MovimentoPOD movimento = new MovimentoPOD(itemPOD, coordenadaDTO);
+
 		ContentValues values = new ContentValues();
 		values.put(IDataBaseConstants.MOVIMENTO.N_HAWB, movimento.getN_hawb());
 		values.put(IDataBaseConstants.MOVIMENTO.DT_ENTREGA, movimento.getDt_entrega());
@@ -155,6 +159,9 @@ public class BancoDoCelularDAO {
 		values.put(IDataBaseConstants.MOVIMENTO.N_TENTATIVA, movimento.getN_tentativas());
 		values.put(IDataBaseConstants.MOVIMENTO.OCORRENCIA, movimento.getOcorrencia());
 		values.put(IDataBaseConstants.MOVIMENTO.SUCESSO, String.valueOf(movimento.getSucesso()));
+		values.put(IDataBaseConstants.MOVIMENTO.LONGITUDE, String.valueOf(movimento.getLongitude()));
+		values.put(IDataBaseConstants.MOVIMENTO.LATITUDE, String.valueOf(movimento.getLatitude()));
+		values.put(IDataBaseConstants.MOVIMENTO.OBSERVACAO, movimento.getObservacao());
 		dbConnections.getWritableDatabase().insert(IDataBaseConstants.MOVIMENTO.TABLE, null, values);
 
 		// remove da lista de pods
@@ -179,7 +186,7 @@ public class BancoDoCelularDAO {
 			UsuarioConectado usuarioConectado = new UsuarioConectado();
 			usuarioConectado.setUsuario(c.getString(c.getColumnIndex(IDataBaseConstants.USUARIO_CONECTADO.USUARIO)));
 			usuarioConectado.setSenha(c.getString(c.getColumnIndex(IDataBaseConstants.USUARIO_CONECTADO.SENHA)));
-			return usuarioConectado; 
+			return usuarioConectado;
 		}
 		return null;
 	}

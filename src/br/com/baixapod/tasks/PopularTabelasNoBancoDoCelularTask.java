@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import br.com.baixapod.R;
 import br.com.baixapod.activitys.AutenticacaoActivity;
 import br.com.baixapod.model.MovimentoPOD;
 import br.com.baixapod.model.Pessoa;
@@ -25,7 +26,7 @@ public class PopularTabelasNoBancoDoCelularTask extends AsyncTask<Object, Object
 
 	@Override
 	protected void onPreExecute() {
-		progress = ProgressDialog.show(contexto, "Aguarde...", "Autenticando Usuário");
+		progress = ProgressDialog.show(contexto, contexto.getString(R.string.aguarde), contexto.getString(R.string.autenticando_usuario));
 	}
 
 	@Override

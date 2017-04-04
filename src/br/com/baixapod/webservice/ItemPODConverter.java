@@ -7,8 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.baixapod.model.MovimentoPOD;
+import br.com.baixapod.dto.CoordenadaDTO;
 import br.com.baixapod.model.ItemPOD;
+import br.com.baixapod.model.MovimentoPOD;
 
 public class ItemPODConverter {
 
@@ -34,10 +35,10 @@ public class ItemPODConverter {
 		return lista;
 	}
 
-	public static String json(List<ItemPOD> lista) {
+	public static String json(List<ItemPOD> lista, CoordenadaDTO coordenadaDTO) {
 		JSONArray jsonArray = new JSONArray();
 		for (int i = 0; i < lista.size(); i++) {
-			MovimentoPOD baixaPOD = new MovimentoPOD(lista.get(0));
+			MovimentoPOD baixaPOD = new MovimentoPOD(lista.get(0), coordenadaDTO);
 			jsonArray.put(baixaPOD.getJSONObject());
 		}
 		return jsonArray.toString();

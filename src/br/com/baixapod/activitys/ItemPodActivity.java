@@ -1,10 +1,14 @@
 package br.com.baixapod.activitys;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +17,6 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,15 +39,15 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import br.com.baixapod.R;
+import br.com.baixapod.dto.CoordenadaDTO;
 import br.com.baixapod.model.ItemPOD;
 import br.com.baixapod.model.MovimentoPOD;
 import br.com.baixapod.model.Ocorrencia;
 import br.com.baixapod.model.PesquisaPOD;
 import br.com.baixapod.util.GPS;
 import br.com.baixapod.util.Internet;
-import br.com.baixapod.util.Mensagem;
+import br.com.baixapod.webservice.WebServiceConstants;
 
 @SuppressLint("NewApi")
 public class ItemPodActivity extends MainActivity {
@@ -67,7 +70,6 @@ public class ItemPodActivity extends MainActivity {
 	private Spinner pesquisaPOD;
 	private TableLayout tableLayout;
 
-	private ProgressDialog dialog = null;
 	private String matricula;
 	private GPS gps;
 
@@ -92,8 +94,9 @@ public class ItemPodActivity extends MainActivity {
 							Environment.getExternalStorageDirectory() + "/ImagemPOD/" + nomeFinalDoArquivo);
 					fos.write(bytes);
 					fos.close();
-				} catch (Exception e) {}
-				 bateuFoto();
+				} catch (Exception e) {
+				}
+				bateuFoto();
 			}
 		}
 	}
@@ -113,6 +116,13 @@ public class ItemPodActivity extends MainActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public GPS getGps() {
+		if (gps == null) {
+			gps = new GPS();
+		}
+		return gps;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -121,11 +131,6 @@ public class ItemPodActivity extends MainActivity {
 
 		Bundle bundle = getIntent().getExtras();
 		matricula = bundle.getString("matricula");
-		gps = new GPS();
-		// Envia Localização
-		if (gps.verificaGPSAtivo(this)) {
-			gps.enviarLocalizacaoDoEntregador(this, matricula);
-		}
 
 		ocultarTecladoInicialmente();
 
@@ -181,6 +186,7 @@ public class ItemPodActivity extends MainActivity {
 
 		Button naoBaixa = (Button) findViewById(R.id.btnNao);
 		naoBaixa.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("static-access")
 			@Override
 			public void onClick(View v) {
 				layoutNaoBaixa.setVisibility(v.VISIBLE);
@@ -201,14 +207,8 @@ public class ItemPodActivity extends MainActivity {
 				itensParaEnviar.add(itemPOD);
 
 				if (Internet.temConexaoComInternet(ItemPodActivity.this, matricula)) {
-					runOnUiThread(new Runnable() {
-						public void run() {
-							// Nao Baixa com Internet
-							naoBaixaPelaInternet(itensParaEnviar);
-						}
-					});
+					naoBaixaPelaInternet(itensParaEnviar);
 				} else {
-					// Nao Baixa sem Internet
 					naoBaixaSemInternet(v, itemPOD, itensParaEnviar);
 				}
 			}
@@ -216,6 +216,7 @@ public class ItemPodActivity extends MainActivity {
 
 		Button cancelar = (Button) findViewById(R.id.btnCancelar);
 		cancelar.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("static-access")
 			@Override
 			public void onClick(View v) {
 				layoutNaoBaixa.setVisibility(v.INVISIBLE);
@@ -254,6 +255,18 @@ public class ItemPodActivity extends MainActivity {
 		// preenche lista ItemPODs
 		popularListaPODs(getBancoDoCelularDAO().listaPODs());
 
+		// Verifica se o GPS está habilitado
+		if (!getGps().verificaGPSAtivo(ItemPodActivity.this)) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("O GPS está Desabilitado!");
+			builder.setMessage("ATIVE SUA LOCALIZAÇÃO!");
+			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+				}
+			});
+			builder.show();
+		}
+
 		List<MovimentoPOD> listaMovimentos = getBancoDoCelularDAO().listaMovimentoPODs();
 		if (listaMovimentos.size() > 0) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -284,46 +297,45 @@ public class ItemPodActivity extends MainActivity {
 				.fromFile(new File(Environment.getExternalStorageDirectory() + "/ImagemPOD", nomeArquivoComExtensao));
 		final String sourceFileUri = uriDestino.getPath();
 
-		dialog = ProgressDialog.show(ItemPodActivity.this, "Aguarde...", "Efetuando Baixa do POD...", true);
+		// faz upload do arquivo e aguarda status 200 OK
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
-				try {
-					// faz upload do arquivo e aguarda status 200 OK
-					if (uploadFile(sourceFileUri, nomeArquivoComExtensao) == 200) {
-						runOnUiThread(new Runnable() {
-							public void run() {
-								ArrayList<ItemPOD> itensParaEnviar = new ArrayList<ItemPOD>();
-								ItemPOD itemPOD = listaItens.get(posicaoAtual);
-								itemPOD.setOcorrencia("69");// Entregue
-								itemPOD.setSucesso(SUCESSO_BAIXA);
-								String n_tentativas = String.valueOf(Integer.parseInt(itemPOD.getN_tentativas()) + 1);
-								itemPOD.setN_tentativas(n_tentativas);
-								itensParaEnviar.add(itemPOD);
-								getBancoNaNuvemDAO().efetuarBaixaPods(ItemPodActivity.this, itensParaEnviar);
-							}
-						});
-					} else {
-						Toast.makeText(ItemPodActivity.this, Mensagem.BAIXA_POD_FAILED, Toast.LENGTH_SHORT).show();
-					}
-					dialog.dismiss();
-				} catch (Exception e) {
-					Toast.makeText(ItemPodActivity.this, Mensagem.BAIXA_POD_FAILED, Toast.LENGTH_SHORT).show();
-					dialog.dismiss();
-				}
+				if (uploadFile(sourceFileUri, nomeArquivoComExtensao) == 200) {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							final ArrayList<ItemPOD> itensParaEnviar = new ArrayList<ItemPOD>();
+							ItemPOD itemPOD = listaItens.get(posicaoAtual);
+							itemPOD.setOcorrencia("69");// Entregue
+							itemPOD.setSucesso(SUCESSO_BAIXA);
+							String n_tentativas = String.valueOf(Integer.parseInt(itemPOD.getN_tentativas()) + 1);
+							itemPOD.setN_tentativas(n_tentativas);
+							itensParaEnviar.add(itemPOD);
 
+							CoordenadaDTO coordenadaAtual = coordenadaAtual();
+							getBancoNaNuvemDAO().efetuarBaixaPods(ItemPodActivity.this, itensParaEnviar,
+									coordenadaAtual);
+						}
+					});
+				} else {
+					msgToast(ItemPodActivity.this, getString(R.string.baixa_pod_online_failed));
+				}
 			}
 		}).start();
+
 	}
 
 	private void efetuarBaixaSemInternetComImagem() {
-		ItemPOD itemPOD = recuperaItemPODnaPosicao(posicaoAtual);
-		ArrayList<ItemPOD> itensParaEnviar = new ArrayList<ItemPOD>();
+		final ItemPOD itemPOD = recuperaItemPODnaPosicao(posicaoAtual);
+		final ArrayList<ItemPOD> itensParaEnviar = new ArrayList<ItemPOD>();
 		itemPOD.setOcorrencia("69");// Entregue
 		itemPOD.setSucesso(SUCESSO_BAIXA);
 		itemPOD.setN_tentativas(String.valueOf(Integer.parseInt(itemPOD.getN_tentativas()) + 1));
 		itensParaEnviar.add(itemPOD);
-		getBancoDoCelularDAO().inserirMovimento(itemPOD);
-		baixaEfetuadaComSucesso(itensParaEnviar);
+
+		CoordenadaDTO coordenadaAtual = coordenadaAtual();
+		getBancoDoCelularDAO().inserirMovimento(coordenadaAtual, itemPOD);
+		baixaEfetuadaComSucesso(itensParaEnviar, getString(R.string.baixa_pod_offline_sucess));
 	}
 
 	private void preenchePrimeiroDaLista() {
@@ -415,7 +427,7 @@ public class ItemPodActivity extends MainActivity {
 
 			// open a URL connection to the Servlet
 			FileInputStream fileInputStream = new FileInputStream(sourceFile);
-			URL url = new URL("http://www.flypost.com.br/wihus/celular/upload_pod.php");
+			URL url = new URL(WebServiceConstants.PODs.uploadPOD);
 			// Open a HTTP connection to the URL
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setDoInput(true); // Allow Inputs
@@ -447,6 +459,8 @@ public class ItemPodActivity extends MainActivity {
 			dos.writeBytes(lineEnd);
 			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 			serverResponseCode = conn.getResponseCode();
+			String result = readStream(conn.getInputStream());// TODO da pra ler
+																// o resultado
 			fileInputStream.close();
 			dos.flush();
 			dos.close();
@@ -456,76 +470,120 @@ public class ItemPodActivity extends MainActivity {
 			return serverResponseCode;
 		}
 		return serverResponseCode;
-
 	}
 
-	public void baixaEfetuadaComSucesso(List<ItemPOD> pods) {
+	public static String readStream(InputStream in) {
+		BufferedReader reader = null;
+		StringBuilder builder = new StringBuilder();
+		try {
+			reader = new BufferedReader(new InputStreamReader(in));
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				builder.append(line + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return builder.toString();
+	}
+
+	public void baixaEfetuadaComSucesso(List<ItemPOD> pods, String msg) {
 		for (ItemPOD itemPOD : pods) {
 			listaItens.remove(itemPOD);
 			popularCampoPesquisa(listaItens);
 		}
 		posicaoAtual = 0;
 		preenchePrimeiroDaLista();
-		Toast.makeText(ItemPodActivity.this, Mensagem.BAIXA_POD_SUCESS, Toast.LENGTH_SHORT).show();
+		msgToast(ItemPodActivity.this, msg);
 	}
 
-	public void baixaPODFailed() {
-		Toast.makeText(ItemPodActivity.this, Mensagem.BAIXA_POD_FAILED, Toast.LENGTH_SHORT).show();
+	public void baixaPODFailed(String msg) {
+		msgToast(ItemPodActivity.this, msg);
 	}
 
 	public void sucessoAoEnviarMovimentoPODs() {
-		Toast.makeText(ItemPodActivity.this, Mensagem.ENVIO_MOVIMENTOS_SUCESSO, Toast.LENGTH_SHORT).show();
+		msgToast(ItemPodActivity.this, getString(R.string.envio_movimentos_sucesso));
 	}
 
 	public void falhaAoEnviarMovimentoPODs() {
-		Toast.makeText(ItemPodActivity.this, Mensagem.ENVIO_MOVIMENTOS_FAILED, Toast.LENGTH_SHORT).show();
+		msgToast(ItemPodActivity.this, getString(R.string.envio_movimentos_falha));
 	}
 
 	private void naoBaixaPelaInternet(final ArrayList<ItemPOD> itensParaEnviar) {
-		getBancoNaNuvemDAO().efetuarBaixaPods(ItemPodActivity.this, itensParaEnviar);
+		try {
+			CoordenadaDTO coordenadaAtual = coordenadaAtual();
+			getBancoNaNuvemDAO().efetuarBaixaPods(ItemPodActivity.this, itensParaEnviar, coordenadaAtual);
+		} catch (Exception e) {
+			msgToast(ItemPodActivity.this, getString(R.string.baixa_pod_online_failed));
+		}
 	}
 
-	private void naoBaixaSemInternet(View v, final ItemPOD itemPOD, final ArrayList<ItemPOD> itensParaEnviar) {
-		getBancoDoCelularDAO().inserirMovimento(itemPOD);
-		baixaEfetuadaComSucesso(itensParaEnviar);
-		layoutNaoBaixa.setVisibility(v.INVISIBLE);
+	@SuppressWarnings("static-access")
+	private void naoBaixaSemInternet(final View v, final ItemPOD itemPOD, final ArrayList<ItemPOD> itensParaEnviar) {
+		try {
+			CoordenadaDTO coordenadaAtual = coordenadaAtual();
+			getBancoDoCelularDAO().inserirMovimento(coordenadaAtual, itemPOD);
+			baixaEfetuadaComSucesso(itensParaEnviar, getString(R.string.baixa_pod_offline_sucess));
+			layoutNaoBaixa.setVisibility(v.INVISIBLE);
+		} catch (Exception e) {
+			msgToast(ItemPodActivity.this, getString(R.string.baixa_pod_online_failed));
+		}
 	}
 
 	private void enviarMovimentos() {
 		if (getBancoDoCelularDAO().listaMovimentoPODs().size() == 0) {
-			Toast.makeText(ItemPodActivity.this, Mensagem.NAO_TEM_MOVIMENTOS_PARA_ENVIAR, Toast.LENGTH_SHORT).show();
+			msgToast(ItemPodActivity.this, getString(R.string.nao_tem_movimentos_para_enviar));
 		} else {
 			if (!Internet.temConexaoComInternet(ItemPodActivity.this, matricula)) {
-				Toast.makeText(ItemPodActivity.this, Mensagem.CONECTE_A_INTERNET, Toast.LENGTH_SHORT).show();
+				msgToast(ItemPodActivity.this, getString(R.string.conecte_a_internet));
 			} else {
 				try {
-					dialog = ProgressDialog.show(ItemPodActivity.this, "Aguarde...", "Enviando Movimentos...", true);
+					final File diretorioDestino = new File(Environment.getExternalStorageDirectory() + "/ImagemPOD");
+					if (!diretorioDestino.exists()) {
+						// se não existir o diretorio e criado
+						diretorioDestino.mkdir();
+					}					
+					//upload das imagens arquivadas em /ImagemPOD do celular e envio dos pods gravados no sqlite
 					new Thread(new Runnable() {
+						@Override
 						public void run() {
-							File diretorioDestino = new File(Environment.getExternalStorageDirectory() + "/ImagemPOD");
-							if (!diretorioDestino.exists()) {
-								// se não existir o diretorio e criado
-								diretorioDestino.mkdir();
-							}
 							String[] list = diretorioDestino.list();
+							boolean uploadOK = true;
 							for (String nomeArquivoComExtensao : list) {
 								String sourceFileUri = diretorioDestino + "/" + nomeArquivoComExtensao;
-								uploadFile(sourceFileUri, nomeArquivoComExtensao);
-							}
-							runOnUiThread(new Runnable() {
-								public void run() {
-									getBancoDoCelularDAO().enviarTodosMovimentosPODs(ItemPodActivity.this);
+								if(uploadFile(sourceFileUri, nomeArquivoComExtensao)!= 200){
+									uploadOK = false;
+									break;
 								}
-							});
+							}
+							if(uploadOK){
+								runOnUiThread(new Runnable() {
+									public void run() {
+										getBancoDoCelularDAO().enviarTodosMovimentosPODs(ItemPodActivity.this);
+									}
+								});
+							}else{
+								msgToast(ItemPodActivity.this, getString(R.string.envio_movimentos_falha));
+							}
 						}
-					}).start();
+					}).start();					
 				} catch (Exception e) {
-					Toast.makeText(ItemPodActivity.this, Mensagem.ENVIO_MOVIMENTOS_FAILED, Toast.LENGTH_SHORT).show();
-				} finally {
-					dialog.dismiss();
+					msgToast(ItemPodActivity.this, getString(R.string.envio_movimentos_falha));
 				}
 			}
 
 		}
+	}
+
+	public CoordenadaDTO coordenadaAtual() {
+		return getGps().recuperarCoordenada(ItemPodActivity.this);
 	}
 }

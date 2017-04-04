@@ -5,7 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
+import br.com.baixapod.dto.CoordenadaDTO;
 
 public class GPS implements LocationListener {
 	
@@ -37,21 +37,19 @@ public class GPS implements LocationListener {
 		return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
 	
-	public void enviarLocalizacaoDoEntregador(Context contexto, String matricula) {
-		//ENVIAR LOCALIZACAO DO ENTREGADOR
+	public CoordenadaDTO recuperarCoordenada(Context contexto) {
+		CoordenadaDTO coordenadaDTO = null;
 		if(verificaGPSAtivo(contexto)){
-			GPS gps = new GPS();
 			String locationProvider = LocationManager.NETWORK_PROVIDER;
-			locationManager.requestLocationUpdates(locationProvider, 0, 0, gps);
+			locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
 			Location localizacao = locationManager.getLastKnownLocation(locationProvider);
 			if (localizacao != null) {
-				double longitude = localizacao.getLongitude();
-				double latitude = localizacao.getLatitude();
-//				String wkt = "POINT(" + longitude + " " + latitude + ")";
-				Toast.makeText(contexto, "Lon:"+longitude+" Lat: "+latitude, Toast.LENGTH_LONG).show();
+				coordenadaDTO = new CoordenadaDTO();
+				coordenadaDTO.setLongitude(String.valueOf(localizacao.getLongitude()));
+				coordenadaDTO.setLatitude(String.valueOf(localizacao.getLatitude()));
 			}
 		}
-		
+		return coordenadaDTO;
 	}
 	
 }

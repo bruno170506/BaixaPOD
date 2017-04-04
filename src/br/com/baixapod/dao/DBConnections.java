@@ -22,7 +22,10 @@ public class DBConnections extends SQLiteOpenHelper {
 				IDataBaseConstants.MOVIMENTO.HR_ENTREGA + " TEXT," + //
 				IDataBaseConstants.MOVIMENTO.N_TENTATIVA + " TEXT," + //
 				IDataBaseConstants.MOVIMENTO.OCORRENCIA + " TEXT,"+//
-				IDataBaseConstants.MOVIMENTO.SUCESSO + " TEXT);");
+				IDataBaseConstants.MOVIMENTO.SUCESSO + " TEXT,"+//
+				IDataBaseConstants.MOVIMENTO.LONGITUDE + " TEXT,"+//
+				IDataBaseConstants.MOVIMENTO.LATITUDE + " TEXT,"+//
+				IDataBaseConstants.MOVIMENTO.OBSERVACAO + " TEXT);");
 
 		// OCORRENCIA
 		dataBase.execSQL("CREATE TABLE " + //

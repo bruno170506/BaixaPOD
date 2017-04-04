@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import br.com.baixapod.dto.CoordenadaDTO;
 
 @SuppressLint("SimpleDateFormat")
 public class MovimentoPOD {
@@ -17,10 +18,14 @@ public class MovimentoPOD {
 	private String n_tentativas;
 	private String n_hawb;
 	private String sucesso;
+	private String longitude;
+	private String latitude;
+	private String observacao;
+	
 
 	public MovimentoPOD(){}
 	
-	public MovimentoPOD(ItemPOD pod) {
+	public MovimentoPOD(ItemPOD pod, CoordenadaDTO coordenadaDTO) {
 		SimpleDateFormat formatData = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss");
 		Date dataHoraAtual = new Date();
@@ -30,6 +35,15 @@ public class MovimentoPOD {
 		this.n_tentativas = pod.getN_tentativas();
 		this.n_hawb = pod.getN_hawb();
 		this.sucesso = pod.getSucesso();
+		if(coordenadaDTO!=null){
+			this.longitude = coordenadaDTO.getLongitude();
+			this.latitude = coordenadaDTO.getLatitude();
+			this.observacao = "";
+		}else{
+			this.longitude = "";
+			this.latitude = "";
+			this.observacao = "GPS DESABILITADO";
+		}
 	}
 
 	public JSONObject getJSONObject() {
@@ -41,6 +55,9 @@ public class MovimentoPOD {
 			obj.put("n_tentativas", getN_tentativas());
 			obj.put("n_hawb", getN_hawb());
 			obj.put("sucesso", getSucesso());
+			obj.put("longitude", getLongitude());
+			obj.put("latitude", getLatitude());
+			obj.put("observacao", getObservacao());
 			
 		} catch (JSONException e) {}
 		return obj;
@@ -91,5 +108,29 @@ public class MovimentoPOD {
 	}
 	public void setSucesso(String sucesso) {
 		this.sucesso = sucesso;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
 	}
 }

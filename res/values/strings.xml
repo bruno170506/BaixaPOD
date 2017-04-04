@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Baixa POD</string>
     <string name="carregarEntregas">Carregar Entregas</string>
     <string name="enviarMovimentos">Enviar Movimentos</string>
+    <string name="enviandoMovimentos">Enviando Movimentos</string>
     <string name="listadeentrega">Lista de Entrega</string>
     <string name="pesquisarPOD">Pesquisar POD</string>
     <string name="senha">Senha</string>
     <string name="sair">Sair</string>
-    
+    <string name="autenticando_usuario">Autenticando Usuário</string>
+    <string name="aguarde" tools:ignore="TypographyEllipsis">Aguarde...</string>
+    <string name="usuario_senha_nao_preenchidos">Usuário/Senha Não foram Preenchido(s)</string>
+    <string name="autenticacao_invalida">Usuário/Senha Inválido(s)</string>
+    <string name="conecte_a_internet">Conecte-se a Internet</string>
+    <string name="habilite_gps">Habilite o GPS!</string>
+    <string name="efetuando_baixa_pod" tools:ignore="TypographyEllipsis">Efetuando Baixa do POD...</string>
+    <string name="baixa_pod_offline_sucess">Movimento POD Gravado no Celular!</string>
+    <string name="baixa_pod_offline_failed">Falha ao Gravar Movimento POD no Celular!</string>
+    <string name="baixa_pod_online_sucess">Movimento POD Enviado com Sucesso!</string>
+    <string name="baixa_pod_online_failed">Falha ao Enviar Movimento POD!</string>
+    <string name="nao_tem_movimentos_para_enviar">Não possui Movimentos para Enviar!</string>
+    <string name="envio_movimentos_sucesso">Movimentos enviados com Sucesso!</string>
+    <string name="envio_movimentos_falha">Falha ao enviar Movimentos</string>
+    <string name="existem_movimentos_pendentes">Existem Movimentos não Enviados! ENVIE-OS!</string>
+
 </resources>

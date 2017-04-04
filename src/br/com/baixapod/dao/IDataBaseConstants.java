@@ -2,7 +2,7 @@ package br.com.baixapod.dao;
 
 public class IDataBaseConstants {
 
-	public static final int VERSION = 7;
+	public static final int VERSION = 9;
 	public static String DATABASE = "DBBaixaPOD";
 
 	/**
@@ -15,8 +15,10 @@ public class IDataBaseConstants {
 		String OCORRENCIA = "ocorrencia";
 		String N_TENTATIVA = "nTentativa";
 		String N_HAWB = "nHawb";
-		String SUCESSO = "sucesso"; // Sucesso ao realizar a baixa Sim(1) ou
-									// Nao(0)
+		String SUCESSO = "sucesso"; // Sucesso ao realizar a baixa Sim(1) ou Nao(0)//
+		String LONGITUDE = "longitude";
+		String LATITUDE = "latitude";
+		String OBSERVACAO = "observacao";	
 	}
 
 	/**

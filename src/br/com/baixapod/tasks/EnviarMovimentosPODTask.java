@@ -4,8 +4,10 @@ package br.com.baixapod.tasks;
 import java.io.File;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Environment;
+import br.com.baixapod.R;
 import br.com.baixapod.activitys.ItemPodActivity;
 import br.com.baixapod.model.MovimentoPOD;
 import br.com.baixapod.webservice.MovimentoPODConverter;
@@ -16,14 +18,19 @@ public class EnviarMovimentosPODTask extends AsyncTask<Object, Object, String> {
 
 	private ItemPodActivity contexto;
 	private List<MovimentoPOD> listaMovimentoPODs;
+	ProgressDialog dialog = null;
 
 	public EnviarMovimentosPODTask(ItemPodActivity ctx) {
 		this.contexto = ctx;
 	}
 
 	@Override
-	protected void onPreExecute() {}
+	protected void onPreExecute() {
+		dialog = ProgressDialog.show(contexto, contexto.getString(R.string.aguarde),
+				contexto.getString(R.string.enviandoMovimentos), true);
+	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected String doInBackground(Object... params) {
 		listaMovimentoPODs = (List<MovimentoPOD>) params[0];
@@ -35,19 +42,18 @@ public class EnviarMovimentosPODTask extends AsyncTask<Object, Object, String> {
 
 	@Override
 	protected void onPostExecute(String resposta) {
-		try {
-			if (resposta.equals("sucesso")) {
+		dialog.dismiss();
+		try {			
+			if (resposta.equals(WebServiceConstants.SUCESSO)) {
 				contexto.sucessoAoEnviarMovimentoPODs();
 				contexto.getBancoDoCelularDAO().limparTabelaMovimentoPODs();
-				
 				File diretorio = new File(
 						Environment.getExternalStorageDirectory() + "/ImagemPOD/");
 				if (diretorio.exists() && diretorio.isDirectory()) {
 					deleteDir(diretorio);
 				}
-				
-			}else{
-				contexto.falhaAoEnviarMovimentoPODs();
+			} else {
+				contexto.falhaAoEnviarMovimentoPODs();			
 			}
 		} catch (Exception e) {
 			contexto.falhaAoEnviarMovimentoPODs();
@@ -64,7 +70,6 @@ public class EnviarMovimentosPODTask extends AsyncTask<Object, Object, String> {
 				}
 			}
 		}
-		// Agora o diretório está vazio, restando apenas deletá-lo.
 		return dir.delete();
 	}
 }

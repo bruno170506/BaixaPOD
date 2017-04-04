@@ -3,16 +3,12 @@ package br.com.baixapod.tasks;
 
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import br.com.baixapod.R;
 import br.com.baixapod.activitys.AutenticacaoActivity;
 import br.com.baixapod.dao.BancoDoCelularDAO;
 import br.com.baixapod.model.Pessoa;
-import br.com.baixapod.webservice.WebClient;
-import br.com.baixapod.webservice.WebServiceConstants;
 
 public class AutenticandoNoCelularTask extends AsyncTask<Object, Object, String> {
 
@@ -27,13 +23,16 @@ public class AutenticandoNoCelularTask extends AsyncTask<Object, Object, String>
 
 	@Override
 	protected void onPreExecute() {
-		progress = ProgressDialog.show(contexto, "Aguarde...", "Autenticando Usuário");
+		progress = ProgressDialog.show(contexto, contexto.getString(R.string.aguarde), contexto.getString(R.string.autenticando_usuario));
 	}
 
 	@Override
 	protected String doInBackground(Object... params) {
 		String matricula = null;
 		try {
+			//tempo para exibir o feedback do progress
+			Thread.sleep(1500);
+			
 			Pessoa p = (Pessoa) params[0];
 			// autentica usuario no celular
 			List<Pessoa> listaPessoa = bancoCelularDAO.listaPessoa();
