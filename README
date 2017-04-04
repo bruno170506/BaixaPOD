@@ -1,0 +1,5 @@
+App Mobile - BAIXA POD
+Aplicativo integrado para efetuar baixa de entregas para Transportadora (WIHUS)
+
+Lembrar:
+	- Configurar URLs REST em WebServiceConstants
